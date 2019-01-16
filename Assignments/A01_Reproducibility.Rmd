@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1: Reproducibility, Workflow, Version Control"
-author: "Student Name"
+author: "Caroline Reents"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -30,22 +30,22 @@ The completed exercise is due on Thursday, 17 January, 2018 before class begins.
 ### Question
 Why are reproducible practices becoming the norm in data analytics?
 
-> Answer: 
+> Answer: Reproducible practices are becoming the norm in data analytics because more and more people are working in teams on projects across different machines. By creating reproducible data, another person on another machine can understand the logic you followed in order to come to a conclusion. By being able to follw that logic, you can come to a consensus on whether or not that is a valid conclusion. 
 
 ### Question
 What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: 
+> Answer: I took the R course my first year and used R for thaat class project as well as on my class project for social science surveys. Other than that I do not have much more experience with R. I have never used git before. 
 
 ### Question
 Are there any components of the course about which you feel confident?
 
-> Answer: 
+> Answer: I feel pretty confident about the interface of R and running basic statistical tests.
 
 ### Question
 Are there any components of the course about which you feel apprehensive?
 
-> Answer: 
+> Answer: I am apprehensive about the connection between git and R, it is a little confusing to me, but I am getting the hang of it. 
 
 
 ## 2) GitHub
