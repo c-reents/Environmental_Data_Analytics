@@ -40,7 +40,7 @@ What are your previous experiences with data analytics, R, and Git? Include both
 ### Question
 Are there any components of the course about which you feel confident?
 
-> Answer: I feel pretty confident about the interface of R and running basic statistical tests.
+> Answer: I feel pretty confident about the interface of R/R studio and running basic statistical tests.
 
 ### Question
 Are there any components of the course about which you feel apprehensive?
@@ -53,6 +53,6 @@ Are there any components of the course about which you feel apprehensive?
 ### Your Repository
 Provide a link below to your course repository in GitHub. Make sure you have pulled all recent changes from the course repository (https://github.com/KateriSalk/Environmental_Data_Analytics) and that you have updated your course README file. 
 
-> Answer: 
+> Answer: https://github.com/c-reents/Environmental_Data_Analytics
 
 
