@@ -117,7 +117,7 @@ class(USGS.flow.data$gage.height.mean)
 
 summary(USGS.flow.data)
 summary(USGS.flow.data$discharge.mean)
-summary(USGS.flow.data$gage.height.mean)
+summary(USGS.flow.data$gage.height.mean) 
 
 ```
 
