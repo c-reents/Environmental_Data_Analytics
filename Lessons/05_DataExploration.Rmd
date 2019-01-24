@@ -50,7 +50,8 @@ At the same time, you should also load your theme if you are doing any data visu
 
 ```{r}
 # Load package
-library(tidyverse)
+library(tidyverse)  
+#loaad packages at the top of your script
 ```
 
 ### Import your datasets
@@ -106,8 +107,8 @@ dim(USGS.flow.data)
 length(USGS.flow.data)
 
 head(USGS.flow.data)
-head(USGS.flow.data, 10)
-tail(USGS.flow.data, 5)
+head(USGS.flow.data, 10) #specifying that you want to look specifically at first 10 rows
+tail(USGS.flow.data, 5) #last 5 rows
 USGS.flow.data[30000:30005, c(3, 8, 14)]
 
 class(USGS.flow.data$datetime)
@@ -121,7 +122,7 @@ summary(USGS.flow.data$gage.height.mean)
 ```
 
 What happened to blank cells in the spreadsheet when they were imported into R?
-> ANSWER: 
+> ANSWER: They became N/As
 
 ## TIPS AND TRICKS: SPREADSHEETS
 
