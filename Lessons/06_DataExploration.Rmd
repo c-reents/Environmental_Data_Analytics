@@ -8,7 +8,6 @@ fig_width: 5
 fig_height: 2.5
 editor_options: 
   chunk_output_type: console
-
 ---
 
 ## LESSON OBJECTIVES
@@ -52,6 +51,7 @@ dim(USGS.flow.data)
 #head(USGS.flow.data)
 class(USGS.flow.data$datetime)
 
+
 ```
 
 ## ADJUSTING DATASETS
@@ -71,6 +71,8 @@ Formatting of dates in R:
 %b  abbreviated month
 %B  unabbreviated month
 
+**format dates as Y/M/D especiaally important in international settings
+
 In some cases when dates are provided as integers, you may need to provide an origin for your dates. Beware: the "origin" date for Excel (Windows), Excel (Mac), R, and MATLAB all have different origin dates. Google this if it comes up.
 
 ```{r}
@@ -81,10 +83,10 @@ help(as.Date)
 # An example is provided to get you started.
 # (code must be uncommented)
 today <- Sys.Date()
-format(today, format = "%B")
-#format(today, format = "")
-#format(today, format = "")
-#format(today, format = "")
+format(today, format = "%B")  #unabbreviated month
+format(today, format = "%m") # month as a number
+format(today, format = "%a") #abbreviated day
+format(today, format = "%A") #unabbreviated day
 
 USGS.flow.data$datetime <- as.Date(USGS.flow.data$datetime, format = "%m/%d/%y") 
 ```
