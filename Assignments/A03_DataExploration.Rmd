@@ -1,6 +1,6 @@
 ---
 title: "Assignment 3: Data Exploration"
-author: "Student Name"
+author: "Caroline Reents"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -29,14 +29,19 @@ The completed exercise is due on Thursday, 31 January, 2019 before class begins.
 
 Check your working directory, load necessary packages (tidyverse), and upload the North Temperate Lakes long term monitoring dataset for the light, temperature, and oxygen data for three lakes (file name: NTL-LTER_Lake_ChemistryPhysics_Raw.csv). Type your code into the R chunk below.
 ```{r}
+getwd()
+setwd("~/Desktop/Data Analytics/EnvironmentalDataAnalytics")
+library(tidyverse)
+library(readr)
 
+lake_dat <- read_csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
 ```
 
 ## 2) Learn about your system
 
 Read about your dataset in the NTL-LTER README file. What are three salient pieces of information you gained from reading this file?
 
-> ANSWER: 
+> ANSWER: I learned that the data was collected in Wisconsin. I also learned how each of the variables were collected and what years the different pieced were collected during. (Carbon: 84-16, nutrients 91-16, limnology 84-16).
 
 ## 3) Obtain basic summaries of your data
 
@@ -50,26 +55,34 @@ Write R commands to display the following information:
 
 ```{r}
 # 1
-
+dim(lake_dat)
 # 2
-
+class(lake_dat)
 # 3
-
+head(lake_dat, 8)
 # 4
-
+class(lake_dat$lakename)
+class(lake_dat$sampledate)
+class(lake_dat$depth)
+class(lake_dat$temperature_C)
 # 5
-
+summary(lake_dat$lakename)
+summary(lake_dat$depth)
+summary(lake_dat$temperature_C)
 ```
 
 Change sampledate to class = date. After doing this, write an R command to display that the class of sammpledate is indeed date. Write another R command to show the first 10 rows of the date column. 
 
 ```{r}
-
+lake_dat$sampledate<-as.Date(lake_dat$sampledate, format="%m/%d/%y")
+class(lake_dat$sampledate)
 ```
 
 Question: Do you want to remove NAs from this dataset? Why or why not?
 
-> ANSWER: 
+> ANSWER: I would remove the NAs from the data set because I am doing quantitative analysis comparing variables, so it is necessary that each measure have all of the variables otherwise certain analyses will not work. 
+
+> note, when you remove the NAs a lot of the lakes disappear from the data set, so depending on your research goals it may or may not be necessarry to remove the NAs. Looking at the data, most NAs are not in the depth or temp variables, and since these are the data we are looking at, I would not suggest removing NAs for this particular assignment. But in general, I would remove thee NAs, so I kept my analysis to a data set without NAs.
 
 
 ## 4) Explore your data graphically
@@ -85,31 +98,44 @@ Write R commands to display graphs depicting:
 7. Scatterplot of temperature by depth
 
 ```{r}
+lake_dat_full<-na.omit(lake_dat)
 # 1
-
+ggplot(lake_dat_full, aes(x = temperature_C)) +
+  geom_bar()
 # 2
+ggplot(lake_dat_full) +
+  geom_histogram(aes(x = temperature_C))
 
 # 3
+ggplot(lake_dat_full) +
+  geom_histogram(aes(x = temperature_C), binwidth = 10)
 
 # 4
+ggplot(lake_dat_full) +
+  geom_freqpoly(aes(x = temperature_C, color = lakename), bins = 50) +
+  scale_x_continuous(limits = c(0, 30)) +
+  theme(legend.position = "top")
 
 # 5
-
+ggplot(lake_dat_full) +
+  geom_boxplot(aes(x = lakename, y = temperature_C))
 # 6
-
+ggplot(lake_dat_full) +
+  geom_boxplot(aes(x = depth, y = temperature_C, group = cut_width(depth, 0.25)))
 # 7 
-
+ggplot(lake_dat_full) +
+  geom_point(aes(x = depth, y = temperature_C))
 ```
 ## 5) Form questions for further data analysis
 
 What did you find out about your data from the basic summaries and graphs you made? Describe in 4-6 sentences.
 
-> ANSWER: 
+> ANSWER: I found that most of the lake temperatures measured were around 5 degrees C. Also, for the most part, the lakes followed similar patterns in the number of counts for each temperature. Paul Lake has the highest average temperature of all of the lakes, but this difference is not significant. As to be expected, the graphs show that as depth increases, temperature decreases.
 
-What are 3 further questions you might ask as you move forward with  analysis of this dataset?
+What are 3 further questions you might ask as you move forward with analysis of this dataset?
 
-> ANSWER 1: 
+> ANSWER 1: I would be interested to see the temperature counts based on year, to see if there are large annual changes in temp. 
 
-> ANSWER 2: 
+> ANSWER 2: Depth based on lake name, it may be useful to know which lakes are deeper than others.
 
-> ANSWER 3: 
+> ANSWER 3: How does dissolved oxygen in the lakes change based on temperature.
