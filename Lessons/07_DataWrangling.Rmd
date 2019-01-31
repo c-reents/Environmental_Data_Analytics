@@ -1,5 +1,5 @@
 ---
-title: "7: Data Wrangling"
+title: "6: Data Exploration"
 author: "Environmental Data Analytics | Kateri Salk"
 date: "Spring 2019"
 output: pdf_document
@@ -10,6 +10,8 @@ editor_options:
 
 ## LESSON OBJECTIVES
 1. Describe the usefulness of data wrangling and its place in the data pipeline
+>data wrangling is manipulating data sets into the format needed for analysis, you may want to visualize the data prior to wrangling 
+
 2. Wrangle datasets with dplyr functions
 3. Apply data wrangling skills to a real-world example dataset
 
@@ -72,7 +74,7 @@ A few relevant commands:
 class(NTL.phys.data$lakeid)
 class(NTL.phys.data$depth)
 
-# matrix filtering
+# matrix filtering, need to provide rows and columns which is why there is a comma at the end
 NTL.phys.data.surface1 <- NTL.phys.data[NTL.phys.data$depth == 0,]
 
 # dplyr filtering
@@ -87,7 +89,7 @@ dim(NTL.phys.data.surface2)
 head(NTL.phys.data.surface3)
 dim(NTL.phys.data.surface3)
 
-# Choose multiple conditions to filter
+# Choose multiple conditions to filter: filtering selects spcific rows
 summary(NTL.phys.data$lakename)
 NTL.phys.data.PeterPaul1 <- filter(NTL.phys.data, lakename == "Paul Lake" | lakename == "Peter Lake")
 NTL.phys.data.PeterPaul2 <- filter(NTL.phys.data, lakename != "Central Long Lake" & 
@@ -107,14 +109,16 @@ NTL.phys.data.JunethruOctober4 <- filter(NTL.phys.data, daynum %in% c(152:304))
 # filter NTL.phys.data for the year 1999
 # what code do you need to use, based on the class of the variable?
 class(NTL.phys.data$year4)
+NTL.phys.data.1999<- filter(NTL.phys.data, year4==1999)
+NTL.phys.data.1999
 
 # Exercise: 
 # filter NTL.phys.data for Tuesday Lake from 1990 through 1999.
+NTL.phys.data.Tues.9099<- filter(NTL.phys.data, lakename=="Tuesday Lake" & year4<2000 & year4>1989)
 
 
 ```
 Question: Why don't we filter using row numbers?
-
 > ANSWER: 
 
 ### Arrange
@@ -124,11 +128,12 @@ Arranging allows us to change the order of rows in our dataset. By default, the 
 ```{r}
 NTL.phys.data.depth.ascending <- arrange(NTL.phys.data, depth)
 NTL.phys.data.depth.descending <- arrange(NTL.phys.data, desc(depth))
-
+View(NTL.phys.data.temp.descending)
 # Exercise: 
 # Arrange NTL.phys.data by temperature, in descending order. 
+NTL.phys.data.temp.descending <- arrange(NTL.phys.data, desc(temperature_C))
 # Which dates, lakes, and depths have the highest temperatures?
-
+#Hummingbird, East Long, low depth (0.0-0.5), summer months
 
 ```
 ### Select
@@ -137,7 +142,7 @@ Selecting allows us to choose certain columns (variables) in our dataset.
 
 ```{r}
 NTL.phys.data.temps <- select(NTL.phys.data, lakename, sampledate:temperature_C)
-
+View(NTL.phys.data.temps)
 ```
 ### Mutate
 
@@ -146,6 +151,7 @@ Mutating allows us to add new columns that are functions of existing columns. Op
 ```{r}
 
 NTL.phys.data.temps <- mutate(NTL.phys.data.temps, temperature_F = (temperature_C*9/5) + 32)
+#new data set has same name as old data set
 
 ```
 ### Pipes
@@ -155,6 +161,7 @@ Sometimes we will want to perform multiple commands on a single dataset on our w
 Let's say we want to take our raw dataset (NTL.phys.data), *then* filter the data for Peter and Paul lakes, *then* select temperature and observation information, and *then* add a column for temperature in Fahrenheit: 
 
 ```{r}
+# %>% reads as "then"
 NTL.phys.data.processed <- 
   NTL.phys.data %>%
   filter(lakename == "Paul Lake" | lakename == "Peter Lake") %>%
