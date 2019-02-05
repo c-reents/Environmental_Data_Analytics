@@ -33,6 +33,8 @@ class(NTL.phys.data.PeterPaul$sampledate)
 
 # Format sampledate as date
 NTL.phys.data.PeterPaul$sampledate <- as.Date(NTL.phys.data.PeterPaul$sampledate, format = "%m/%d/%y")
+View(NTL.phys.data.PeterPaul)
+## why is this not making the date in the right format???????
 
 # Select Peter and Paul Lakes from the nutrient dataset
 NTL.nutrient.data.PeterPaul <- filter(NTL.nutrient.data, lakename == "Paul Lake" | lakename == "Peter Lake")
@@ -65,7 +67,7 @@ For most situations, data analysis works best when you have organized your data 
 * Each row is an observation (e.g., sampling event from a specific date and/or location)
 * Each value is in its own cell
 
-However, there may be situations where we want to reshape our dataset, for example if we want to facet numerical data points by measurement type (more on this in the data visualization unit). We can program this reshaping in a few short lines of code using the package `tidyr`, which is conveniently included in the `tidyverse` package. 
+However, there may be situations where we want to *reshape* our dataset, for example if we want to facet numerical data points by measurement type (more on this in the data visualization unit). We can program this reshaping in a few short lines of code using the package `tidyr`, which is conveniently included in the `tidyverse` package. 
 
 ```{r}
 # Gather nutrient data into one column
@@ -81,6 +83,7 @@ NTL.nutrient.data.PeterPaul.spread <- spread(NTL.nutrient.data.PeterPaul.gathere
 
 # Split components of cells into multiple columns
 # Opposite of 'separate' is 'unite'
+#seperate will seperate the column and remove the original, if you want to retain the original use mutate
 NTL.nutrient.data.PeterPaul.dates <- separate(NTL.nutrient.data.PeterPaul.skinny, sampledate, c("Y", "m", "d"))
 
 ```
@@ -143,6 +146,7 @@ NTL.PeterPaul.summaries <-
             sdTN = sd(tn_ug), 
             meanTP = mean(tp_ug), 
             sdTP = sd(tp_ug))
+View(NTL.PeterPaul.summaries)
 
 write.csv(NTL.PeterPaul.summaries, row.names = FALSE, 
           file ="./Data/Processed/NTL-LTER_Lake_Summaries_PeterPaul_Processed.csv")
