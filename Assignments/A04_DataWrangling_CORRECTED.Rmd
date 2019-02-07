@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Student Name"
+author: "Caroline Reents"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -34,8 +34,34 @@ The completed exercise is due on Thursday, 7 February, 2019 before class begins.
 
 ```{r}
 #1
-
+getwd()
+library(tidyverse)
+library(readr)
+EPAair_O3_NC2017_raw <- read_csv("Data/Raw/EPAair_O3_NC2017_raw.csv")
+EPAair_O3_NC2018_raw <- read_csv("Data/Raw/EPAair_O3_NC2018_raw.csv")
+EPAair_PM25_NC2017_raw <- read_csv("Data/Raw/EPAair_PM25_NC2017_raw.csv")
+EPAair_PM25_NC2018_raw <- read_csv("Data/Raw/EPAair_PM25_NC2018_raw.csv")
 #2
+head(EPAair_O3_NC2017_raw)
+colnames(EPAair_O3_NC2017_raw)
+summary(EPAair_O3_NC2017_raw)
+dim(EPAair_O3_NC2017_raw)
+
+head(EPAair_O3_NC2018_raw)
+colnames(EPAair_O3_NC2018_raw)
+summary(EPAair_O3_NC2018_raw)
+dim(EPAair_O3_NC2018_raw)
+
+head(EPAair_PM25_NC2017_raw)
+colnames(EPAair_PM25_NC2017_raw)
+summary(EPAair_PM25_NC2017_raw)
+dim(EPAair_PM25_NC2017_raw)
+
+head(EPAair_PM25_NC2018_raw)
+colnames(EPAair_PM25_NC2018_raw)
+summary(EPAair_PM25_NC2018_raw)
+dim(EPAair_PM25_NC2018_raw)
+
 ```
 
 ## Wrangle individual datasets to create processed files.
@@ -46,12 +72,34 @@ The completed exercise is due on Thursday, 7 February, 2019 before class begins.
 
 ```{r}
 #3
+EPAair_O3_NC2017_raw$Date <- as.Date(EPAair_O3_NC2017_raw$Date, format = "%m/%d/%y")
+EPAair_O3_NC2018_raw$Date <- as.Date(EPAair_O3_NC2018_raw$Date, format = "%m/%d/%y")
+EPAair_PM25_NC2017_raw$Date <- as.Date(EPAair_PM25_NC2017_raw$Date, format = "%m/%d/%y")
+EPAair_PM25_NC2018_raw$Date <- as.Date(EPAair_PM25_NC2018_raw$Date, format = "%m/%d/%y")
+
+class(EPAair_O3_NC2017_raw$Date)
 
 #4
+EPAair_O3_NC2017_skinny <- select(EPAair_O3_NC2017_raw, Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) 
+
+EPAair_O3_NC2018_skinny <- select(EPAair_O3_NC2018_raw, Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+EPAair_PM25_NC2017_skinny <- (EPAair_PM25_NC2017_raw, Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+EPAair_PM25_NC2018_skinny <- (EPAair_PM25_NC2018_raw, Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+#I keep getting an error on this code saying that there is an unexpeected ',' but only for the PM25 data... for the 03 data it works perfecttly fine... this makes no sense because the code is the same and the coolumn names are the same for each data set
+
 
 #5
+EPAair_PM25_NC2017_skinny$AQS_PARAMETER_DESC <- "PM2.5"
+EPAair_PM25_NC2018_skinny$AQS_PARAMETER_DESC <- "PM2.5"
 
 #6
+write.csv(EPAair_O3_NC2017_skinny, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2017_skinny.csv")
+write.csv(EPAair_O3_NC2018_skinny, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_skinny.csv")
+write.csv(EPAair_PM25_NC2017_skinny, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2017_skinny.csv")
+write.csv(EPAair_PM25_NC2018_skinny, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2018_skinny.csv")
 
 ```
 
