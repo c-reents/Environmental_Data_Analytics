@@ -38,6 +38,7 @@ getwd()
 library(tidyverse)
 library(readr)
 library(stringr)
+library(lubridate)
 EPAair_O3_NC2017_raw <- read_csv("Data/Raw/EPAair_O3_NC2017_raw.csv")
 EPAair_O3_NC2018_raw <- read_csv("Data/Raw/EPAair_O3_NC2018_raw.csv")
 EPAair_PM25_NC2017_raw <- read_csv("Data/Raw/EPAair_PM25_NC2017_raw.csv")
@@ -91,11 +92,11 @@ EPAair_O3_NC2017_skinny <- select(EPAair_O3_NC2017_raw, Date, DAILY_AQI_VALUE, S
 
 EPAair_O3_NC2018_skinny <- select(EPAair_O3_NC2018_raw, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-EPAair_PM25_NC2017_skinny <- (EPAair_PM25_NC2017_raw, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+EPAair_PM25_NC2017_skinny <- select(EPAair_PM25_NC2017_raw, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-EPAair_PM25_NC2018_skinny <- (EPAair_PM25_NC2018_raw, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+EPAair_PM25_NC2018_skinny <- select(EPAair_PM25_NC2018_raw, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-#I keep getting an error on this code saying that there is an unexpeected ',' but only for the PM25 data... for the 03 data it works perfecttly fine... this makes no sense because the code is the same and the coolumn names are the same for each data set
+
 
 
 #5
@@ -123,14 +124,22 @@ write.csv(EPAair_PM25_NC2018_skinny, row.names = FALSE, file = "./Data/Processed
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1718_Processed.csv"
 
 ```{r}
-#8
+#7
+EPA_full_skinny <- rbind(EPAair_O3_NC2017_skinny, EPAair_O3_NC2018_skinny, EPAair_PM25_NC2017_skinny, EPAair_PM25_NC2018_skinny)
+
+#8 
+EPA_Black_Bryson_Oak <- EPA_full_skinny %>%
+  filter(Site.Name == "Blackstone" | Site.Name =="Bryson City" | Site.Name == "Triple Oak") %>%
+  mutate(month=month(Date), year= year(Date))
+
 
 #9
-
+EPA_Black_Bryson_Oak_spread <- spread(EPA_Black_Bryson_Oak, AQS_PARAMETER_DESC, DAILY_AQI_VALUE)
+View(EPA_Black_Bryson_Oak_spread)
 #10
-
+dim(EPA_Black_Bryson_Oak_spread)
 #11
-
+write.csv(EPA_Black_Bryson_Oak_spread, row.names=FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
 ```
 
 
@@ -142,10 +151,26 @@ b. A summary table of the mean, minimum, and maximum AQI values of O3 and PM2.5 
 
 ```{r}
 #12a
+AQI_month <- EPA_Black_Bryson_Oak_spread %>%
+  group_by(month) %>%
+  filter(!is.na(Ozone) &!is.na(PM2.5)) %>%
+summarise(meanO3=mean(Ozone), meanPM25= mean(PM2.5))
 
 #12b
+AQI_site_summaries <- EPA_Black_Bryson_Oak_spread %>%
+  group_by(Site.Name) %>%
+  filter(!is.na(Ozone) & !is.na(PM2.5)) %>%
+summarise(meanO3=mean(Ozone),
+          minimumO3=min(Ozone),
+          maximumO3=max(Ozone),
+          meanPM25= mean(PM2.5),
+          minimumPM25=min(PM2.5),
+          maximumPM25=max(PM2.5))
 
 #13
+View(AQI_month)
+View(AQI_site_summaries)
 
+#for some reason Triple Oak is not in the site summary table 
 ```
 

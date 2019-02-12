@@ -1,4 +1,4 @@
-"Date","DAILY_AQI_VALUE","Site Name","AQS_PARAMETER_DESC","COUNTY","SITE_LATITUDE","SITE_LONGITUDE"
+"Date","DAILY_AQI_VALUE","Site.Name","AQS_PARAMETER_DESC","COUNTY","SITE_LATITUDE","SITE_LONGITUDE"
 2018-02-16,35,"Taylorsville Liledoun","Ozone","Alexander",35.9138,-81.191
 2018-02-17,31,"Taylorsville Liledoun","Ozone","Alexander",35.9138,-81.191
 2018-02-18,37,"Taylorsville Liledoun","Ozone","Alexander",35.9138,-81.191
