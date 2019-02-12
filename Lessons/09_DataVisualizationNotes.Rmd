@@ -160,18 +160,29 @@ print(tempvsdepth)
 
 NvsP <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth)) +
-  #geom_point() +
+  geom_point() +
   geom_smooth(method = lm) +
-  #geom_abline(aes(slope = 16, intercept = 0))
+  geom_abline(aes(slope = 16, intercept = 0), lty=2)
+#lty=2 makes it a dotted line
 print(NvsP)
 
 # Exercise: Plot relationships between air quality measurements
 
 # 1. 
 # Plot AQI values for ozone by PM2.5, colored by site. 
-# Add a line of best fit for the linear regression of these variables.
 
+AQI_bysite<- 
+  ggplot(EPAair, aes(x=PM2.5, y=Ozone, color=Site.Name)) +
+  geom_point()
+print(AQI_bysite)
+
+# Add a line of best fit for the linear regression of these variables.
+AQI_bysite_bestfit<- 
+  ggplot(EPAair, aes(x=PM2.5, y=Ozone, color=Site.Name)) +
+  geom_point() +
+  geom_smooth(method=lm)
   
+print(AQI_bysite_bestfit)
 ```
 
 ### Plotting continuous vs. categorical variables
@@ -183,42 +194,44 @@ PeterPaul.nutrient.summaries <- PeterPaul.nutrients.gathered %>%
   summarise(sd = sd(concentration), 
             mean = mean(concentration))
 
+
 Nutrientplot <- 
   ggplot(PeterPaul.nutrients.gathered) +
-  geom_bar(aes(x = lakename, y = concentration, fill = as.factor(nutrient)), # why did we use fill?
-           position = "dodge", stat = "summary", fun.y = "mean")             # what's happening here?
+  geom_bar(aes(x = lakename, y = concentration, fill = as.factor(nutrient)), # why did we use fill? to fill in the bar not color the borders of the bars
+         position = "dodge",  stat = "summary", fun.y = "mean")             # what's happening here? make a summary of the stat and usse function mean
 print(Nutrientplot)
 
-Nutrientplot2 <- 
-  ggplot(PeterPaul.nutrient.summaries, aes(x = lakename, y = mean, fill = as.factor(nutrient))) + #
-  geom_bar(stat = "identity", position = "dodge") + # what does the stat command do?
+Nutrientplot2 <- #we are using a different data set
+  ggplot(PeterPaul.nutrient.summaries, aes(x = lakename, y = mean, fill = as.factor(nutrient))) + #placed aes in the main ggplot function
+  geom_bar(stat = "identity", position = "dodge") + # what does the stat command do? puts the bars in, stat is just taking idenetity of that cell
   geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd), # how do we specify error bars?
                  position = "dodge")
 print(Nutrientplot2)
+#these are bad error bars because they go below zero, which makes no sense
 
 # Are there more effective ways to produce summary stats for categories?
 
 # Box and whiskers plot
 Nutrientplot3 <-
   ggplot(PeterPaul.nutrients.gathered, aes(x = lakename, y = concentration)) +
-  geom_boxplot(aes(color = nutrient)) # Why didn't we use "fill"?
+  geom_boxplot(aes(color = nutrient)) # Why didn't we use "fill"? that would color the inside instead of the outside
 print(Nutrientplot3)
 
 # Dot plot
 Nutrientplot4 <-
   ggplot(PeterPaul.nutrients.gathered, aes(x = lakename, y = concentration)) +
   geom_dotplot(aes(color = nutrient), binaxis = "y", binwidth = 1, 
-               stackdir = "center", position = "dodge") #
+               stackdir = "center", position = "dodge") # plotting every single value, if there are the same values they get put side by side, plots the concntration of the values, better for values of lower spread
 print(Nutrientplot4)
 
-# Violin plot
+# Violin plot: similar as dot plot but with lines
 Nutrientplot5 <-
   ggplot(PeterPaul.nutrients.gathered, aes(x = lakename, y = concentration)) +
   geom_violin(aes(color = nutrient)) #
 print(Nutrientplot5)
 
 # Frequency polygons
-# Using a tidy dataset
+# Using a tidy dataset, must specify colors of lines
 Nutrientplot6 <-
   ggplot(PeterPaul.chem.nutrients) +
   geom_freqpoly(aes(x = tn_ug), color = "black") +
@@ -239,6 +252,14 @@ print(Nutrientplot7)
 # 1. 
 # Create a bar chart plus standard deviation error bars for PM2.5, divided by year. 
 # Create separate bars for each site. 
+#make the EPA air summary data matrix
+PM25_bar1 <-
+  ggplot(EPAairsummary, aes(x=as.factor(year), y=mean, fill=Site.Name)) +
+  geom_bar(stat="identity", position = "dodge") +
+  geom_errorbar(aes(ymin = mean(PM2.5)-sd(PM2.5), ymax= mean(PM2.5)+sd(PM2.5)))
+  
+  
+print(PM25_bar1)
 
 # 2. 
 # Create a new plot that better depicts the distribution of PM2.5 concentrations. 
