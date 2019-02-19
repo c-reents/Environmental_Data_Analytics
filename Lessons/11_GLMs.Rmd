@@ -43,6 +43,10 @@ theme_set(mytheme)
 
 The one-sample test (model of the mean), two-sample t-test, analysis of variance (ANOVA), and linear regression are all special cases of the **generalized linear model** (GLM). The GLM also includes analyses not covered in this class, including logistic regression, multinomial regression, chi square, and log-linear models. The common characteristic of general linear models is the expression of a continuous response variable as a linear combination of the effects of categorical or continuous explanatory variables, plus an error term that expresses the random error associated with the coefficients of all explanatory variables. The explanatory variables comprise the deterministic component of the model, and the error term comprises the stochastic component of the model. Historically, artificial distinctions were made between linear models that contained categorical and continuous explanatory variables, but this distinction is no longer made. The inclusion of these models within the umbrella of the GLM allows models to fit the main effects of both categorical and continuous explanatory variables as well as their interactions. 
 
+Assumptions:
+can be approximated by a normal dist
+variance is the same across groups
+
 ### Choosing a model from your data: A "cheat sheet"
 
 **T-test:** Continuous response, one categorical explanatory variable with two categories (or comparison to a single value if a one-sample test).
@@ -84,7 +88,7 @@ O3.onesample
 
 What information does the output give us? How might we report this information in a report?
 
-> ANWSER:
+> ANWSER: Ozone AQI in 2017-2018 were significantly less than 50 (one sample t-test; t= -41.9, df= 184, p < 0.0001)
 
 ### Two-sample t-test
 The two-sample *t* test is used to test the hypothesis that the mean of two samples is equivalent. Unlike the one-sample tests, a two-sample test requires a second assumption that the variance of the two groups is equivalent. Are Ozone levels different between Blackstone and Bryson City?
@@ -108,6 +112,8 @@ summary(O3.twosample2)
 ```
 ### Non-parametric equivalent of t-test: Wilcoxon test
 
+parametric tests assume normal distribution
+
 When we wish to avoid the assumption of normality, we can apply *distribution-free*, or non-parametric, methods in the form of the Wilcoxon rank sum (Mann-Whitney) test. The Wilcoxon test replaces the data by their rank and calculates the sum of the ranks for each group. Notice that the output of the Wilcoxon test is more limited than its parametric equivalent.
 
 ```{r}
@@ -121,6 +127,7 @@ O3.twosample.wilcox
 A one-way ANOVA is the same test in practice as a two-sample t-test but for three or more groups. In R, we can  run the model with the function `lm` or `aov`, the latter of which which will allow us to run post-hoc tests to determine pairwise differences.
 
 Are PM2.5 levels different between Blackstone, Bryson City, and Triple Oak?
+
 ```{r}
 shapiro.test(EPAair$PM2.5[EPAair$Site.Name == "Blackstone"])
 shapiro.test(EPAair$PM2.5[EPAair$Site.Name == "Bryson City"])
@@ -152,7 +159,7 @@ print(PM2.5.anova.plot)
 ```
 What information does the output give us? How might we report this information in a report?
 
-> ANSWER:
+> ANSWER: (ANOVA; F=   , df=   , p <   )
 
 ### Non-parametric equivalent of ANOVA: Kruskal-Wallis Test
 As with the Wilcoxon test, the Kruskal-Wallis test is the non-parametric counterpart to the one-way ANOVA. Here, the data from two or more independent samples are replaced with their ranks without regard to the grouping AND based on the between-group sum of squares calculations. 
