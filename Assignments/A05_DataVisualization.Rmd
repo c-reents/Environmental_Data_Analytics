@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Caroline Reents"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -34,14 +34,45 @@ The completed exercise is due on Tuesday, 19 February, 2019 before class begins.
 
 ```{r}
 #1
+getwd()
+
+library(tidyverse)
+library(readr)
+library(viridis)
+library(RColorBrewer)
+library(colormap)
+
+PeterPaul.ChemPhys.processed <- read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") 
+View(PeterPaul.ChemPhys.processed)
+PeterPaul.ChemNut.processed <- read_csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
+View(PeterPaul.ChemNut.processed)
+USGS_Flow_Raw <- read_csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv")
+View(USGS_Flow_Raw)
+ECOTOX_Neonicotinoids_Mortality_raw <- read_csv("./Data/Raw/ECOTOX_Neonicotinoids_Mortality_raw.csv")
+View(ECOTOX_Neonicotinoids_Mortality_raw)
 
 #2
+class(PeterPaul.ChemPhys.processed$sampledate)
+class(PeterPaul.ChemNut.processed$sampledate) #already reads as date
+class(USGS_Flow_Raw$datetime)
+
+
+PeterPaul.ChemPhys.processed$sampledate <-as.Date(PeterPaul.ChemPhys.processed$sampledate, format = "%Y-%m-%d")
+USGS_Flow_Raw$datetime <- as.Date(USGS_Flow_Raw$datetime, format = "%Y-%m-%d")
+
+
 ```
 ## Define your theme
 3. Build a theme and set it as your default theme.
 
 ```{r}
 #3
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
+
+
 
 ```
 
@@ -55,6 +86,11 @@ Hint: a good way to build graphs is to make them ugly first and then create more
 ```{r}
 #4
 
+graph.num.4 <- ggplot(PeterPaul.ChemNut.processed, aes(x = po4, y = tp_ug, color = lakename, shape= lakename))  +
+ geom_point(alpha = 0.8, size = 3)
+                                                                                      
+
+print(graph.num.4)
 ```
 
 
@@ -62,7 +98,19 @@ Hint: a good way to build graphs is to make them ugly first and then create more
 
 ```{r}
 #5
+Nutrients_PeterPaulGathered_Processed <- read_csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
+Nutrients_PeterGathered_Processed <- filter(Nutrients_PeterPaulGathered_Processed, lakename == "Peter Lake")
+View(Nutrients_PeterGathered_Processed)
+Peter.faceted <- ggplot (Nutrients_PeterGathered_Processed, aes(x= sampledate, y=concentration, color=depth, lakename = "Peter Lake")) +
+  geom_point() +
+  facet_grid(nutrient~.) +
+  theme(strip.background = element_rect(fill = "black"), strip.text = element_text(color = "white")) +
+  scale_color_viridis(option = "magma", direction=-1)+
+  labs(x="Year", y= "Concentration (μ/L)", color= "Depth (m)")
+  
 
+
+print(Peter.faceted)
 ```
 
 
@@ -70,7 +118,14 @@ Hint: a good way to build graphs is to make them ugly first and then create more
 
 ```{r}
 #6
+colnames(USGS_Flow_Raw)[colnames(USGS_Flow_Raw)=="84936_00060_00003"] <- "dischargemean"
 
+USGSplot <- ggplot(USGS_Flow_Raw, aes(x = datetime, y =  dischargemean)) +
+  geom_point()
+
+
+
+print(USGSplot)
 ```
 Question: How do these two types of lines affect your interpretation of the data?
 

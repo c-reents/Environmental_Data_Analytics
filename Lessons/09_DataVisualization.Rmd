@@ -160,8 +160,8 @@ print(tempvsdepth)
 
 NvsP <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth)) +
-  #geom_point() +
-  geom_smooth(method = lm) +
+  geom_point() +
+  geom_smooth(method = lm) #+
   #geom_abline(aes(slope = 16, intercept = 0))
 print(NvsP)
 
