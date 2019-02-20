@@ -44,16 +44,16 @@ library(colormap)
 library(gridExtra)
 library(stringr)
 
-PeterPaul.ChemPhys.processed <- read.csv("Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") 
+PeterPaul.ChemPhys.processed <- read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") 
 View(PeterPaul.ChemPhys.processed)
 
-PeterPaul.ChemNut.processed <- read.csv("Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
+PeterPaul.ChemNut.processed <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
 View(PeterPaul.ChemNut.processed)
 
-USGS_Flow_Raw <- read_csv("Data/Raw/USGS_Site02085000_Flow_Raw.csv")
+USGS_Flow_Raw <- read_csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv")
 View(USGS_Flow_Raw)
 
-ECOTOX_Neonicotinoids_Mortality_raw <- read.csv("Data/Raw/ECOTOX_Neonicotinoids_Mortality_raw.csv")
+ECOTOX_Neonicotinoids_Mortality_raw <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Mortality_raw.csv")
 View(ECOTOX_Neonicotinoids_Mortality_raw)
 
 colnames(USGS_Flow_Raw) <- c("agency_cd", "site_no", "datetime", 
