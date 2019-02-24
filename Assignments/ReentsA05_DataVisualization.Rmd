@@ -45,16 +45,16 @@ library(gridExtra)
 library(stringr)
 
 PeterPaul.ChemPhys.processed <- read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") 
-View(PeterPaul.ChemPhys.processed)
+
 
 PeterPaul.ChemNut.processed <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
-View(PeterPaul.ChemNut.processed)
+
 
 USGS_Flow_Raw <- read_csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv")
-View(USGS_Flow_Raw)
+
 
 ECOTOX_Neonicotinoids_Mortality_raw <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Mortality_raw.csv")
-View(ECOTOX_Neonicotinoids_Mortality_raw)
+
 
 colnames(USGS_Flow_Raw) <- c("agency_cd", "site_no", "datetime", 
                               "discharge.max", "discharge.max.approval", 
@@ -111,7 +111,7 @@ PeterPaul.ChemNut.processed$po4 <- as.numeric(PeterPaul.ChemNut.processed$po4)
 View(PeterPaul.ChemNut.processed)
 graph.num.4 <- ggplot(PeterPaul.ChemNut.processed, aes(x = po4, y = tp_ug, color= lakename))  +
   xlim(0,50) +
-  labs(x="Phosphate (μ/L)", y="Total Phosphorus (μ/L)" , color="Lake Name" )+
+  labs(x="Phosphate (mu/L)", y="Total Phosphorus (mu/L)" , color="Lake Name" )+
   theme(legend.position = "right")+
   scale_color_brewer (palette = "Set1")+
   geom_point(alpha = 0.8, size = 3)+
@@ -135,7 +135,7 @@ Peter.faceted <- ggplot (Nutrients_PeterGathered_Processed, aes(x= sampledate, y
   facet_grid(nutrient~.) +
   theme(strip.background = element_rect(fill = "black"), strip.text = element_text(color = "white")) +
   scale_color_viridis(option = "magma", direction=-1)+
-  labs(x="Year", y= "Concentration (μ/L)", color= "Depth (m)")
+  labs(x="Year", y= "Concentration (mu/L)", color= "Depth (m)")
   
 
 
@@ -160,8 +160,7 @@ USGSplot1 <- ggplot(USGS_Flow_Raw, aes(x = datetime, y =  discharge.max)) +
   geom_line(color="deeppink1")
 
 
-print(USGSplot)
-print(USGSplot1)
+
 graph.num.6<-grid.arrange(USGSplot, USGSplot1, top="", bottom="Year", 
                left="Maximum Discharge (f^3/s)", right="")
 print(graph.num.6)
