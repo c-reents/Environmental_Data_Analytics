@@ -21,11 +21,11 @@ getwd()
 library(tidyverse)
 #install.packages("lubridate")
 library(lubridate)
-#install.packages("nlme")
+install.packages("nlme")
 library(nlme)
-#install.packages("lsmeans")
+install.packages("lsmeans")
 library(lsmeans)
-#install.packages("multcompView")
+install.packages("multcompView")
 library(multcompView)
 
 PeterPaul.chem <- read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
@@ -129,6 +129,7 @@ cld(TempTest.posthoc, alpha = 0.05, Letters = letters, adjust = "tukey")
 # display our final relationship
 ggplot(PeterPaul.summertemp, aes(x = sampledate, y = temperature_C, color = lakename)) +
   geom_point() +
+  labs(x="Sample Date", y="Temperature (Celcius)", color="Lake Name")+
   scale_color_manual(values = c("#7fcdbb", "#253494")) +
   geom_abline(intercept = 20.47, slope = 0.0001)
 ```
