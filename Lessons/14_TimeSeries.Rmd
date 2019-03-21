@@ -14,6 +14,8 @@ editor_options:
 2. Choose and justify appropriate statistical models when time is an explanatory variable
 3. Apply Mann-Kendall and Seasonal Mann-Kendall to datasets with temporal components
 
+What is a random effect? account for their variabilit but dont care about their direct effect on the dpeendent variable. 
+
 ## SET UP YOUR DATA ANALYSIS SESSION
 
 ```{r, message = FALSE, warning = FALSE}
@@ -21,7 +23,6 @@ getwd()
 library(tidyverse)
 #install.packages("trend")
 library(trend)
-
 
 PeterPaul.nutrients <- read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
 USGS.flow.data <- read.csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv")
@@ -61,6 +62,7 @@ A Mann-Kendall test will analyze whether there is a monotonic trend in the respo
 
 ```{r}
 # Wrangle our dataset
+View(PeterPaul.nutrients.surface)
 PeterPaul.nutrients.surface <- 
   PeterPaul.nutrients %>%
   select(-lakeid, -depth_id, -comments) %>%
@@ -76,7 +78,8 @@ ggplot(PeterPaul.nutrients.surface, aes(x = sampledate, y = tp_ug, color = laken
 Peter.nutrients.surface <- filter(PeterPaul.nutrients.surface, lakename == "Peter Lake")
 Paul.nutrients.surface <- filter(PeterPaul.nutrients.surface, lakename == "Paul Lake")
 
-# Run a Mann-Kendall test
+# Run a Mann-Kendall test, the null is that there is no trend over time, z is the direction and the magnitude of the trend
+
 mk.test(Peter.nutrients.surface$tp_ug)
 
 ```
@@ -86,15 +89,16 @@ However, it looks like there might be a breakpoint in our dataset. Further, we k
 ### Pettitt's Test
 Pettitt's test is also included in the `trend` package. This nonparametric test will determine whether there is a shift in the central tendency of the time series and will tell us at what point the changepoint occurs (if it detects one). Note: Pettitt's Test will only test for one changepoint, and further tests must be run if multiple change points are suspected.
 ```{r}
-# Test for change point
+# Test for change point, gives a probable change point, if the p is not signiifant it means the tet is not detecting a change point "K 35" --> it is the 35th data point
 pettitt.test(Peter.nutrients.surface$tp_ug)
 
 # Run separate Mann-Kendall for each change point
-mk.test(Peter.nutrients.surface$tp_ug[1:34])
+mk.test(Peter.nutrients.surface$tp_ug[1:34]) #did not see a trend
 mk.test(Peter.nutrients.surface$tp_ug[35:132])
 
 # Is there a second change point?
 pettitt.test(Peter.nutrients.surface$tp_ug[35:132])
+#yes at space 79 (after 35 so 35+79=114 - at spot 114)
 
 # Run another Mann-Kendall for the second change point
 mk.test(Peter.nutrients.surface$tp_ug[35:113])
@@ -107,7 +111,10 @@ pettitt.test(Paul.nutrients.surface$tp_ug)
 # Add vertical lines to the original graph to represent change points
 ggplot(PeterPaul.nutrients.surface, aes(x = sampledate, y = tp_ug, color = lakename)) + 
   geom_point() +
-  scale_color_manual(values = c("#7fcdbb", "#253494"))
+  scale_color_manual(values = c("#7fcdbb", "#253494"))+
+  geom_vline(xintercept = as.Date("1993-05-20"), color="#253494", lty=2)+
+  geom_vline(xintercept = as.Date("1998-01-01"), color="#253494", lty=2)
+  
 
 ```
 ### Seasonal Mann-Kendall
