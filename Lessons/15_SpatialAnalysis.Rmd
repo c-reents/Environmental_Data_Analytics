@@ -316,23 +316,25 @@ mapView(counties_sf)
 
 ```{r read HUCs shapefile}
 #Read the shapefile into an sf dataframe named "huc8_sf"
-huc8_sf <-   
+huc8_sf <-   st_read('./Data/Spatial/huc_250k_nc.shp')
 
 #Check the CRS
-
+st_crs(huc8_sf)
 
 #Exaimine the column names
-
+names(huc8_sf)
 
 #View the data as a map
-
+head(huc8_sf)
+mapView(huc8_sf)
 ```
 
 > _Challenge_: Read in the NC 8-Digit HUC dataset again, but this time _filter_ the data so the result only includes the one with a HUC_NAME value of 'Upper Neuse'.
 
 ```{r Select the Upper Neuse HUC 8}
 #Read the shapefile into an sf dataframe
-upperNeuse_sf <-  
+upperNeuse_sf <-  st_read(./Data/Spatial/huc_250k_nc.shp) %<%
+  filter(HUC_NAME = ????)
   
 
 ```
@@ -356,10 +358,13 @@ mapview(state_sf2)
 > Now you try it: Aggregate the HUC data on the SUB attribute, computing the sum of the "AREA" field and view the result. 
 
 ```{r Aggregate the HUC data on an attribute, saving as huc2_sf}
-huc2_sf <- 
+huc2_sf <- huc8_sf %>% 
+  group_by(SUB) %>%
+  summarize(AREA = sum(AREA))
   
   
 mapview(huc2_sf)
+mapview(huc2_sf['AREA'])
 ```
 
 
