@@ -547,6 +547,7 @@ userLat = 36.0045442
 userLng = -78.9426381
 
 #Create a simple features point geometry from the point
+
 theSite_sfp <- st_point(c(userLng,userLat))
 
 #Create a simple features column from the point geometry object
