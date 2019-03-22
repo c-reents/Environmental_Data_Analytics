@@ -1,6 +1,6 @@
 ---
 title: "Assignment 8: Time Series Analysis"
-author: "Student Name"
+author: "Caroline Reents"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -32,13 +32,43 @@ The completed exercise is due on Tuesday, 19 March, 2019 before class begins.
 
 Question: Did you do this?
 
-> ANSWER: 
+> ANSWER: Yes
 
 ## Set up your session 
 2. Set up your session. Upload the EPA air quality raw dataset for PM2.5 in 2018, and the processed NTL-LTER dataset for nutrients in Peter and Paul lakes. Build a ggplot theme and set it as your default theme. Make sure date variables are set to a date format.
 
 ```{r}
+getwd()
+library(tidyverse)
 
+library(lubridate)
+
+library(nlme)
+
+library(lsmeans)
+
+library(multcompView)
+
+library(trend)
+
+
+EPA_PM25_2018 <- read.csv("./Data/Raw/EPAair_PM25_NC2018_raw.csv")
+  
+Nutrients_PeterPaul <- read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
+
+Nutrients_PeterPaul$sampledate <- as.Date(Nutrients_PeterPaul$sampledate, 
+                                               format = "%m/%d/%y")
+
+EPA_PM25_2018$Date <- as.Date(EPA_PM25_2018$Date, format= "%m/%d/%y")
+
+class(EPA_PM25_2018$Date)
+
+class(Nutrients_PeterPaul$sampledate)
+
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
 ```
 
 
@@ -51,6 +81,18 @@ Research question: Do PM2.5 concentrations have a significant trend in 2018?
 3a. Illustrate PM2.5 concentrations by date. Do not split aesthetics by site.
 
 ```{r}
+plotconc_date <- ggplot(EPA_PM25_2018, aes(x = Date, y = Daily.Mean.PM2.5.Concentration)) +
+  geom_point() 
+
+PM2.5<-EPA_PM25_2018
+
+PM2.5 = PM2.5[order(PM2.5[,'Date'],-PM2.5[,'Site.ID']),]
+
+PM2.5 = PM2.5[!duplicated(PM2.5$Date),]
+
+
+
+
 
 ```
 
@@ -63,23 +105,60 @@ PM2.5 = PM2.5[!duplicated(PM2.5$Date),]
 3d. Run a mixed effects model. 
 
 ```{r}
+#3c
+
+ConcTest.auto <- lme(data = PM2.5,
+                     Daily.Mean.PM2.5.Concentration ~ Date, 
+                     random = ~1|Site.ID)
+
+ConcTest.auto
+
+ACF(ConcTest.auto)
+#0.514
+
+#3d
+ConcTest.mixed <- lme(data = PM2.5,
+                     Daily.Mean.PM2.5.Concentration ~ Date, 
+                     random = ~1|Site.Name,
+                     correlation = corAR1(form = ~ Date|Site.Name,
+                                          value=0.514), method = "REML")
+summary(ConcTest.mixed)
+
+
+
 
 ```
 
-Is there a significant increasing or decreasing trend in PM2.5 concentrations in 2018? 
+Is there a significant increasing or decreasing trend in PM2.5 concentrations in 2018?
 
-> ANSWER: 
+
+
+> ANSWER: No significant trend
 
 3e. Run a fixed effects model with Date as the only explanatory variable. Then test whether the mixed effects model is a better fit than the fixed effect model. 
 
 ```{r}
+
+
+ConcTest.fixed <- gls(data = PM2.5,
+                     Daily.Mean.PM2.5.Concentration ~ Date, 
+                     method = "REML")
+
+summary(ConcTest.fixed)
+
+anova(ConcTest.fixed, ConcTest.mixed)
+
+# mixed has lower AIC
+
+ConcTest.posthoc = lsmeans(ConcTest.mixed, ~ Date)
+cld(ConcTest.posthoc, alpha = 0.05, Letters = letters, adjust = "tukey")
 
 ```
 
 
 Which model is better?
 
-> ANSWER: 
+> ANSWER: Mixed effects
 
 
 ## Run a Mann-Kendall test
@@ -90,16 +169,48 @@ Research question: Is there a trend in total N surface concentrations in Peter a
 
 ```{r}
 
+View(Nutrients_PeterPaul)
+Nutrients_PeterPaul_surface <- 
+  Nutrients_PeterPaul %>%
+  select(-lakeid, -depth_id, -comments) %>%
+  filter(depth == 0) %>%
+  filter(!is.na(tn_ug))
+
+Nutrients_Peter_surface <- filter(Nutrients_PeterPaul_surface, lakename == "Peter Lake")
+Nutrients_Paul_surface <- filter(Nutrients_PeterPaul_surface, lakename == "Paul Lake")
+
+mk.test(Nutrients_Peter_surface$tn_ug)
+#trend over time, positive
+mk.test(Nutrients_Paul_surface$tn_ug)
+#no trend over time
+
+
+
+
+
+pettitt.test(Nutrients_Peter_surface$tn_ug)
+
+mk.test(Nutrients_Peter_surface$tn_ug[1:36]) #no signifcant trend
+mk.test(Nutrients_Peter_surface$tn_ug[37:63]) #no significant trend
+
+
+
 ```
 
 
 What are the results of this test?
 
-> ANSWER: 
+> ANSWER: A chaange point occurs at the 36th data point (1992-05-27). Before and after this chaange point there are no significant trends in the data
 
 5. Generate a graph that illustrates the TN concentrations over time, coloring by lake and adding vertical line(s) representing changepoint(s).
 
 ```{r}
+
+ggplot(Nutrients_PeterPaul_surface, aes(x = sampledate, y = tn_ug, color = lakename)) + 
+  geom_point() +
+  scale_color_manual(values = c("#7fcdbb", "#253494"))+
+  geom_vline(xintercept = as.Date("1992-05-27"), color="#253494", lty=2)
+
 
 ```
 
