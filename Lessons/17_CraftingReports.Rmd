@@ -1,4 +1,4 @@
-
+i
 ---
 title: "17: Crafting Reports"
 author: "Environmental Data Analytics | Kateri Salk"
@@ -29,23 +29,61 @@ A handy cheat sheet for R markdown can be found [here](https://www.rstudio.com/w
 
 ## WHY R MARKDOWN?
 
-<Fill in our discussion below with bullet points. Use italics and bold for emphasis>
+<Fill in our discussion below with bullet points. Use italics and bold for emphasis> the carrots make the words not show up in the pdf 
+
+adding bullets: 
+
+- code output and text/notes all together in one doc
+- can knit to useful formats (html, pdf, docx)
+- legible code and output
+- git friendly
+- reproducible 
+- updating capabilities
+- focus on output and conclusions, not code (flexible formatting)
+- simple syntax and autoreferencing
+
+
 
 ## TEXT EDITING CHALLENGE
 
 Create a table below that details the example datasets we have been using in class. The first column should contain the name of the dataset and the second column should include some relevant information about the dataset.
+
+Data Set | Information
+-------- | ----------
+ECOTOX   | 
+USGS     |
+EPA Air  |
+      
+
 
 
 ## R CHUNK EDITING CHALLENGE
 ### Installing packages
 Create an R chunk below that installs the package `knitr`. Instead of commenting out the code, customize the chunk options such that the code is not evaluated (i.e., not run). 
 
+```{r, echo=FALSE}
+install.packages(knitr)
+
+```
 
 ### Setup
 Create an R chunk below called "setup" that checks your working directory, loads the packages `tidyverse` and `knitr`, and sets a ggplot theme. 
 
-Load the NTL-LTER_Lake_Nutrients_Raw dataset, display the head of the dataset, and set the date column to a date format.
+```{r, setup, echo=FALSE}
+library(knitr)
+library(tidyverse)
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+```
 
+Load the NTL-LTER_Lake_Nutrients_Raw dataset, display the head of the dataset, and set the date column to a date format.
+```{r, }
+NTL.nutrient.data <- read.csv("./Data/Raw/NTL-LTER_Lake_Nutrients_Raw.csv")
+head(NTL.nutrient.data)
+NTL.nutrient.data$sampledate <- as.Date(NTL.nutrient.data$sampledate, format = "%m/%d/%y")
+
+```
 Customize the chunk options such that the code is run but is not displayed in the final document.
 
 

@@ -353,6 +353,8 @@ mapview(state_sf)
 #Alternatively, we could use the `st_union` function
 state_sf2 <- st_union(counties_sf)
 mapview(state_sf2)
+
+
 ```
 
 > Now you try it: Aggregate the HUC data on the SUB attribute, computing the sum of the "AREA" field and view the result. 
@@ -481,6 +483,9 @@ demog_df <- read.csv('./Data/Spatial/NC_Demography.csv') %>%
 #Join the two datasets using "GEOID" from the left dataset and "FIPS" from the right
 counties_sf_utm_join <- counties_sf_utm %>% 
   left_join(y = demog_df,by = c("GEOID" =  "FIPS"))
+
+colnames(counties_sf_utm)
+colnames(demog_df)
 
 #Check the dimensions
 dim(counties_sf_utm)
